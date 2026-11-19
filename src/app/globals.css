@@ -1,26 +1,187 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------ */
+/*  WedPlan design tokens                                              */
+/*  Light + dark are two sets of the same variables — never hardcode.  */
+/* ------------------------------------------------------------------ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f4ef;
+  --foreground: #1b1420;
+
+  --card: #ffffff;
+  --card-foreground: #1b1420;
+
+  --popover: #ffffff;
+  --popover-foreground: #1b1420;
+
+  --primary: #6b2e5f;
+  --primary-foreground: #fdf8f5;
+
+  --secondary: #ebdcea;
+  --secondary-foreground: #4a2140;
+
+  --muted: #efe9e1;
+  --muted-foreground: #6f6572;
+
+  --accent: #ebdcea;
+  --accent-foreground: #4a2140;
+
+  --destructive: #b4524f;
+  --destructive-foreground: #fdf6f4;
+
+  --border: #e4dcd2;
+  --input: #e4dcd2;
+  --ring: #a96f9c;
+
+  /* Brand surface — logo, auth panel, accents that are not "primary" */
+  --brand: #8f4a6e;
+  --brand-foreground: #fdf8f5;
+
+  --panel: #ead5e3;
+  --panel-foreground: #2b1a28;
+
+  /* Footer — follows the active theme */
+  --footer: #f4eaef;
+  --footer-foreground: #1b1420;
+  --footer-muted: #6f6572;
+
+  /* Status pills */
+  --success: #2f6b43;
+  --success-bg: #d7ebd9;
+  --warning: #8a6a12;
+  --warning-bg: #f5e6b8;
+  --danger: #9b3f42;
+  --danger-bg: #f8dad9;
+
+  --radius: 0.75rem;
+}
+
+[data-theme="dark"] {
+  --background: #14101a;
+  --foreground: #f3edea;
+
+  --card: #1e1a24;
+  --card-foreground: #f3edea;
+
+  --popover: #1e1a24;
+  --popover-foreground: #f3edea;
+
+  --primary: #ebc0dc;
+  --primary-foreground: #2a1226;
+
+  --secondary: #2a2331;
+  --secondary-foreground: #ede3ea;
+
+  --muted: #241e2b;
+  --muted-foreground: #a79cab;
+
+  --accent: #2a2331;
+  --accent-foreground: #ede3ea;
+
+  --destructive: #7a3b3b;
+  --destructive-foreground: #f7e9e9;
+
+  --border: #2e2736;
+  --input: #2e2736;
+  --ring: #c98fb8;
+
+  --brand: #d9a5c6;
+  --brand-foreground: #2a1226;
+
+  --panel: #472a42;
+  --panel-foreground: #f3e7ef;
+
+  --footer: #0f0c13;
+  --footer-foreground: #f3edea;
+  --footer-muted: #9c909f;
+
+  --success: #cfe8d5;
+  --success-bg: #2e5d3e;
+  --warning: #f2e2a8;
+  --warning-bg: #6b5a22;
+  --danger: #f2cfcd;
+  --danger-bg: #7a3b3b;
+
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+
+  --color-panel: var(--panel);
+  --color-panel-foreground: var(--panel-foreground);
+
+  --color-footer: var(--footer);
+  --color-footer-foreground: var(--footer-foreground);
+  --color-footer-muted: var(--footer-muted);
+
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-display);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--color-border);
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    color-scheme: light;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background-color: var(--color-brand);
+    color: var(--color-brand-foreground);
+  }
 }
