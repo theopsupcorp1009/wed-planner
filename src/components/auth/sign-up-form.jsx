@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/auth-client";
+import { toast } from 'react-toastify';
 
 const ROLES = [
   { value: "customer", label: "Customer" },
@@ -15,9 +17,62 @@ const ROLES = [
 export function SignUpForm() {
   const [role, setRole] = useState("customer");
 
-  const handleSignUp = (e) => {
-    e.preventDefault();
-  };
+  const uploadImage = async (image) => {
+  if (!image || image.size === 0) return null;
+
+  const formData = new FormData();
+  formData.append('image', image);
+
+  const response = await fetch(
+    `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
+    {
+      method: 'POST',
+      body: formData,
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(result.error?.message || 'Image upload failed!');
+  }
+
+  return result.data.url;
+};
+const handleSignUp = async (e) => {
+  e.preventDefault();
+
+  try {
+    const formData = new FormData(e.target);
+    const newUser = Object.fromEntries(formData.entries());
+
+
+    const imageFile = formData.get('image');
+    const imageUrl = await uploadImage(imageFile);
+
+    const { data, error } = await authClient.signUp.email({
+      ...newUser,
+      image: imageUrl,
+      callbackURL: '/sign-in',
+    });
+
+    if (error) {
+      toast.error(error.message || 'Sign up failed!');
+      return;
+    }
+
+    toast.success('Account created successfully!');
+  } catch (err) {
+    toast.error(err.message || 'Something went wrong!');
+  }
+};
+
+const handleGoogleSignUp = async() => {
+   const data = await authClient.signIn.social({
+    provider: "google",
+  });
+}
+
 
   return (
     <div className="w-full">
@@ -106,6 +161,7 @@ export function SignUpForm() {
           </Button>
           <Button
             type="button"
+            onClick={handleGoogleSignUp}
             variant="secondary"
             className="h-[52px] w-full rounded-lg text-[15px]"
           >

@@ -1,14 +1,11 @@
-"use client";
+"use client";import { toast } from 'react-toastify';
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authClient } from "@/lib/auth-client";
 
-export function SignInForm() {
-  const handleSignIn = (e) => {
-    e.preventDefault();
-  };
 
   return (
     <div className="w-full">
