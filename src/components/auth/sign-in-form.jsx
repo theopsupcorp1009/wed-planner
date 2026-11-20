@@ -7,6 +7,37 @@ import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 
 
+export function SignInForm() {
+ const handleSignIn = async (e) => {
+  e.preventDefault();
+
+  try {
+    const formData = new FormData(e.target);
+    const user = Object.fromEntries(formData.entries());
+
+    const { data, error } = await authClient.signIn.email({
+      ...user,
+      callbackURL: '/',
+    });
+
+    if (error) {
+      toast.error(error.message || 'Sign in failed!');
+      return;
+    }
+
+    toast.success('Successfully signed in!');
+  } catch (err) {
+    toast.error(err.message || 'Something went wrong!');
+  }
+};
+
+const handleGoogleSignIn = async() => {
+   const data = await authClient.signIn.social({
+    provider: "google",
+  });
+}
+
+
   return (
     <div className="w-full">
       <header className="mb-9">
@@ -59,6 +90,7 @@ import { authClient } from "@/lib/auth-client";
           </Button>
           <Button
             type="button"
+            onClick = {handleGoogleSignIn}
             variant="secondary"
             className="h-[52px] w-full rounded-lg text-[15px]"
           >
