@@ -81,8 +81,8 @@
   --accent: #2a2331;
   --accent-foreground: #ede3ea;
 
-  --destructive: #7a3b3b;
-  --destructive-foreground: #f7e9e9;
+  --destructive: #e58e8b;
+  --destructive-foreground: #2a1010;
 
   --border: #2e2736;
   --input: #2e2736;
@@ -185,3 +185,20 @@
     color: var(--color-brand-foreground);
   }
 }
+
+/* Toasts follow the active theme instead of react-toastify's white default. */
+:root {
+  --toastify-color-light: var(--card);
+  --toastify-text-color-light: var(--card-foreground);
+  --toastify-color-progress-light: var(--brand);
+}
+
+.Toastify__toast {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.Toastify__close-button {
+  color: var(--card-foreground);
+}
+

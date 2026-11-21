@@ -1,4 +1,6 @@
 import { Inter, Playfair_Display } from "next/font/google";
+// Loaded before globals.css so our theme overrides win the cascade.
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";

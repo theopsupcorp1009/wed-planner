@@ -10,6 +10,18 @@ export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL,
     emailAndPassword: {
         enabled: true,
+        // Matches the "6+ chars" hint on the sign-up form.
+        minPasswordLength: 6,
+    },
+    user: {
+        additionalFields: {
+            role: {
+                type: "string",
+                required: false,
+                defaultValue: "customer",
+                input: true,
+            },
+        },
     },
     socialProviders: {
         google: {

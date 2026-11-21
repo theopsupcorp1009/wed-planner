@@ -1,42 +1,100 @@
-"use client";import { toast } from 'react-toastify';
+"use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Where to send the user after a successful sign in. */
+const AFTER_SIGNIN_PATH = "/";
 
 export function SignInForm() {
- const handleSignIn = async (e) => {
-  e.preventDefault();
+  const router = useRouter();
+  const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  try {
+  // Clear a field's error as soon as the user starts fixing it.
+  const clearError = (field) => {
+    setErrors((previous) => ({ ...previous, [field]: "" }));
+    setFormError("");
+  };
+
+  const validate = (email, password) => {
+    const nextErrors = {};
+
+    if (!email.trim()) {
+      nextErrors.email = "Email is required.";
+    } else if (!EMAIL_PATTERN.test(email.trim())) {
+      nextErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!password) {
+      nextErrors.password = "Password is required.";
+    }
+
+    return nextErrors;
+  };
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    setFormError("");
+
     const formData = new FormData(e.target);
-    const user = Object.fromEntries(formData.entries());
+    const email = String(formData.get("email") || "");
+    const password = String(formData.get("password") || "");
 
-    const { data, error } = await authClient.signIn.email({
-      ...user,
-      callbackURL: '/',
-    });
+    const nextErrors = validate(email, password);
+    setErrors(nextErrors);
 
-    if (error) {
-      toast.error(error.message || 'Sign in failed!');
+    if (Object.keys(nextErrors).length > 0) {
       return;
     }
 
-    toast.success('Successfully signed in!');
-  } catch (err) {
-    toast.error(err.message || 'Something went wrong!');
-  }
-};
+    setIsSubmitting(true);
 
-const handleGoogleSignIn = async() => {
-   const data = await authClient.signIn.social({
-    provider: "google",
-  });
-}
+    try {
+      const { error } = await authClient.signIn.email({
+        email: email.trim(),
+        password,
+        // Only used by better-auth for email-verification links.
+        callbackURL: AFTER_SIGNIN_PATH,
+      });
 
+      if (error) {
+        // Bad credentials are not a single field's fault — show them above the button.
+        setFormError(
+          error.message || "Sign in failed. Please check your details and try again."
+        );
+        return;
+      }
+
+      toast.success("Successfully signed in!");
+
+      // better-auth does not redirect the email/password flow, so we do it here.
+      router.push(AFTER_SIGNIN_PATH);
+    } catch {
+      setFormError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setFormError("");
+
+    try {
+      await authClient.signIn.social({ provider: "google" });
+    } catch {
+      setFormError("Could not continue with Google. Please try again.");
+    }
+  };
 
   return (
     <div className="w-full">
@@ -60,7 +118,15 @@ const handleGoogleSignIn = async() => {
             type="email"
             autoComplete="email"
             aria-required="true"
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? "email-error" : undefined}
+            onChange={() => clearError("email")}
           />
+          {errors.email ? (
+            <p id="email-error" className="text-sm text-destructive">
+              {errors.email}
+            </p>
+          ) : null}
         </div>
 
         <div className="space-y-2.5">
@@ -73,7 +139,15 @@ const handleGoogleSignIn = async() => {
             type="password"
             autoComplete="current-password"
             aria-required="true"
+            aria-invalid={Boolean(errors.password)}
+            aria-describedby={errors.password ? "password-error" : undefined}
+            onChange={() => clearError("password")}
           />
+          {errors.password ? (
+            <p id="password-error" className="text-sm text-destructive">
+              {errors.password}
+            </p>
+          ) : null}
           <div className="flex justify-end pt-1.5">
             <Link
               href="/forgot-password"
@@ -84,13 +158,23 @@ const handleGoogleSignIn = async() => {
           </div>
         </div>
 
+        {formError ? (
+          <p role="alert" className="text-sm text-destructive">
+            {formError}
+          </p>
+        ) : null}
+
         <div className="space-y-3 pt-3">
-          <Button type="submit" className="h-[52px] w-full rounded-lg text-[15px]">
-            Sign In
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="h-[52px] w-full rounded-lg text-[15px]"
+          >
+            {isSubmitting ? "Signing in…" : "Sign In"}
           </Button>
           <Button
             type="button"
-            onClick = {handleGoogleSignIn}
+            onClick={handleGoogleSignIn}
             variant="secondary"
             className="h-[52px] w-full rounded-lg text-[15px]"
           >
