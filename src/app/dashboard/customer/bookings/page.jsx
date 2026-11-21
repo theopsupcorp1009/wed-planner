@@ -1,29 +1,26 @@
-import { CalendarDays } from "lucide-react";
+import CustomerBookingsClient from "@/components/users/CustomerBooking";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export const metadata = {
   title: "My Bookings",
 };
 
-export default function CustomerBookingsPage() {
-  return (
-    <section>
-      <h1 className="font-serif text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-        My Bookings
-      </h1>
-      <p className="mt-2 text-muted-foreground">
-        Track every request you have sent and every confirmed date.
-      </p>
+export default async function CustomerBookingsPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const user = session?.user;
 
-      <div className="mt-8 rounded-2xl border border-border bg-card px-6 py-14 text-center">
-        <CalendarDays
-          className="mx-auto size-8 text-muted-foreground"
-          aria-hidden="true"
-        />
-        <p className="mt-4 font-medium text-foreground">No bookings yet</p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Once you book a vendor, it will appear here.
-        </p>
-      </div>
-    </section>
-  );
+  const res = user?.email
+    ? await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/bookings/my-bookings/${encodeURIComponent(user.email)}`,
+        { cache: "no-store" }
+      )
+    : null;
+
+  const data = res?.ok ? await res.json() : [];
+  const bookings = Array.isArray(data) ? data : data.bookings || [];
+
+  return <CustomerBookingsClient initialBookings={bookings} />;
 }

@@ -47,7 +47,10 @@ const handleSubmit = async (e) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             serviceId: service._id,
+            serviceName: service.serviceName,
+            category: service.category,
             vendorId: service.vendorId,
+            vendorName: service.creatorName,
             creatorMail: service.creatorMail,
             customerName: user.name,
             customerEmail: user.email,
