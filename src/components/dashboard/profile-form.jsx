@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Message } from "@/components/dashboard/dashboard-parts";
+import { LoadingBlock } from "@/components/dashboard/dashboard-parts";
 import { authClient, useSession } from "@/lib/auth-client";
 import { uploadImage } from "@/lib/uploadImage";
 
@@ -15,7 +15,7 @@ export default function ProfileForm({ isVendor }) {
   const [saving, setSaving] = useState(false);
 
   if (!user) {
-    return <Message text="Loading profile..." />;
+    return <LoadingBlock rows={4} />;
   }
 
   const handleSubmit = async (e) => {

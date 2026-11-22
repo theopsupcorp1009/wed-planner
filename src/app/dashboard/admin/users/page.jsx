@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Message, PageTitle, StatusPill } from "@/components/dashboard/dashboard-parts";
+import { LoadingBlock, Message, PageTitle, StatusPill } from "@/components/dashboard/dashboard-parts";
 import { api } from "@/lib/api";
 
 export default function AdminUsersPage() {
@@ -65,7 +65,7 @@ export default function AdminUsersPage() {
       </div>
 
       {!users ? (
-        <Message text="Loading users..." />
+        <LoadingBlock rows={5} />
       ) : filteredUsers.length === 0 ? (
         <Message text="No users found." />
       ) : (

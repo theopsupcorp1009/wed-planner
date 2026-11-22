@@ -118,7 +118,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-transparent bg-background/85 backdrop-blur-md">
-      <div className="mx-auto flex h-20 w-full max-w-[1280px] items-center justify-between gap-6 px-5 sm:px-8">
+      <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between gap-6 px-4 sm:px-6">
         <Logo className="text-[26px]" />
 
         <div className="flex items-center gap-3">
@@ -266,7 +266,7 @@ export default function Navbar() {
       {open ? (
         <div id="mobile-nav" className="border-t border-border bg-background lg:hidden">
           <nav
-            className="mx-auto flex w-full max-w-[1280px] flex-col gap-1 px-5 py-4"
+            className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6"
             aria-label="Mobile"
           >
             {NAV_LINKS.map((link) => (

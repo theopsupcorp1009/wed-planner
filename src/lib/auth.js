@@ -9,9 +9,9 @@ export const auth = betterAuth({
     database: mongodbAdapter(db),
     baseURL: process.env.BETTER_AUTH_URL,
     trustedOrigins: [
-    process.env.BETTER_AUTH_URL,
-    "https://wedplan-ten.vercel.app",
-],
+        "http://localhost:3000",
+        "https://wedplan-ten.vercel.app",
+    ],
     emailAndPassword: {
         enabled: true,
         minPasswordLength: 6,
@@ -34,6 +34,12 @@ export const auth = betterAuth({
                 type: "string",
                 required: false,
                 defaultValue: "free",
+                input: false,
+            },
+            premium: {
+                type: "boolean",
+                required: false,
+                defaultValue: false,
                 input: false,
             },
             subscriptionExpiresAt: {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { CalendarDays, MapPin, Mail, Clock, X } from "lucide-react";
 import { api } from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
 import { StatusPill } from "@/components/dashboard/dashboard-parts";
 
 const formatDate = (value) => {
@@ -51,9 +52,15 @@ export default function CustomerBookingsClient() {
 
   if (!bookings) {
     return (
-      <p className="py-14 text-center text-sm text-stone-500 dark:text-stone-400">
-        Loading your bookings...
-      </p>
+      <section aria-hidden="true">
+        <Skeleton className="h-9 w-48 rounded-md" />
+        <Skeleton className="mt-2 h-4 w-72 rounded-md" />
+        <div className="mt-6 space-y-3">
+          {[0, 1, 2].map((item) => (
+            <Skeleton key={item} className="h-16 w-full rounded-2xl" />
+          ))}
+        </div>
+      </section>
     );
   }
 

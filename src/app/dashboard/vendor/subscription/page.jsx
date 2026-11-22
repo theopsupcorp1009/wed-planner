@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import { Message, PageTitle } from "@/components/dashboard/dashboard-parts";
+import { LoadingBlock, PageTitle } from "@/components/dashboard/dashboard-parts";
 import { api } from "@/lib/api";
 
 const FREE_FEATURES = [
@@ -69,7 +69,12 @@ export default function VendorSubscriptionPage() {
   };
 
   if (!me) {
-    return <Message text="Loading subscription..." />;
+    return (
+      <section>
+        <PageTitle title="Subscription" text="Choose the plan that fits your business." />
+        <LoadingBlock rows={3} />
+      </section>
+    );
   }
 
   const isPremium = me.subscriptionPlan === "premium";

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Message, PageTitle, StatusPill } from "@/components/dashboard/dashboard-parts";
+import { LoadingBlock, Message, PageTitle, StatusPill } from "@/components/dashboard/dashboard-parts";
 import { api } from "@/lib/api";
 
 export default function AdminServicesPage() {
@@ -76,7 +76,7 @@ export default function AdminServicesPage() {
       </div>
 
       {!services ? (
-        <Message text="Loading services..." />
+        <LoadingBlock rows={5} />
       ) : filteredServices.length === 0 ? (
         <Message text="No services found." />
       ) : (

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import { Message, PageTitle, StatusPill } from "@/components/dashboard/dashboard-parts";
+import { LoadingBlock, Message, PageTitle, StatusPill } from "@/components/dashboard/dashboard-parts";
 import { api } from "@/lib/api";
 
 export default function VendorServicesPage() {
@@ -51,7 +51,7 @@ export default function VendorServicesPage() {
       <PageTitle title="My Services" text="Manage the services you offer to couples." />
 
       {!services ? (
-        <Message text="Loading services..." />
+        <LoadingBlock rows={4} />
       ) : services.length === 0 ? (
         <Message text="You have not added any services yet." />
       ) : (

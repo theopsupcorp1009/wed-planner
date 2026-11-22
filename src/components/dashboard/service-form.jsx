@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Message } from "@/components/dashboard/dashboard-parts";
+import { LoadingBlock, Message } from "@/components/dashboard/dashboard-parts";
 import { api } from "@/lib/api";
 import { uploadImage } from "@/lib/uploadImage";
 
@@ -32,7 +32,7 @@ export default function ServiceForm({ serviceId }) {
   }, [serviceId]);
 
   if (serviceId && service === undefined) {
-    return <Message text="Loading service..." />;
+    return <LoadingBlock rows={5} />;
   }
 
   if (serviceId && service === null) {
@@ -79,6 +79,11 @@ export default function ServiceForm({ serviceId }) {
       router.push("/dashboard/vendor/services");
     } catch (err) {
       toast.error(err.message);
+
+      // Free plan limit reached — send the vendor to the upgrade page.
+      if (/upgrade to premium/i.test(err.message)) {
+        router.push("/dashboard/vendor/subscription");
+      }
     } finally {
       setSaving(false);
     }

@@ -76,7 +76,7 @@ export function DashboardShell({ role, children }) {
     href === basePath ? pathname === href : pathname?.startsWith(href);
 
   return (
-    <div className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-8 lg:py-10">
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
       <div className="lg:grid lg:grid-cols-[264px_minmax(0,1fr)] lg:items-start lg:gap-8">
         {/* Mobile bar */}
         <div className="mb-6 flex items-center justify-between gap-4 lg:hidden">

@@ -1,9 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 export default function Banner() {
   return (
-    <section className="mx-auto w-full max-w-[1280px] px-5 pt-10 pb-16 sm:px-8 lg:pt-14 lg:pb-24">
+    <section className="mx-auto w-full max-w-6xl px-4 pt-10 pb-16 sm:px-6 lg:pt-14 lg:pb-24">
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         {/* Copy */}
         <div>
@@ -27,22 +28,15 @@ export default function Banner() {
 
         {/* Arch-shaped hero visual */}
         <div className="relative">
-          <div
-            className="relative aspect-[4/3] w-full overflow-hidden rounded-t-[999px] bg-panel"
-            role="img"
-            aria-label="A couple at an elegant wedding"
-          >
-            {/*
-              Real photo goes here later — same frame, no layout change:
-              <Image
-                src="/images/hero-wedding.jpg"
-                alt="A couple at an elegant wedding"
-                fill
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
-              />
-            */}
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-[999px] bg-panel">
+            <Image
+              src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80"
+              alt="A couple at an elegant wedding"
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover transition-transform duration-500 hover:scale-[1.03]"
+            />
           </div>
         </div>
       </div>

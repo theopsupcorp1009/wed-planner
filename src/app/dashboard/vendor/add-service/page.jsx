@@ -1,4 +1,4 @@
-import ServiceForm from "@/components/dashboard/service-form";
+import AddServiceGate from "@/components/dashboard/add-service-gate";
 import { PageTitle } from "@/components/dashboard/dashboard-parts";
 
 export const metadata = {
@@ -12,7 +12,7 @@ export default function AddServicePage() {
         title="Add Service"
         text="New services stay pending until an admin approves them."
       />
-      <ServiceForm />
+      <AddServiceGate />
     </section>
   );
 }

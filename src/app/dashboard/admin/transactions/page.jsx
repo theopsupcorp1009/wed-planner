@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Message, PageTitle, StatusPill } from "@/components/dashboard/dashboard-parts";
+import { LoadingBlock, Message, PageTitle, StatusPill } from "@/components/dashboard/dashboard-parts";
 import { api } from "@/lib/api";
 
 export default function AdminTransactionsPage() {
@@ -22,7 +22,7 @@ export default function AdminTransactionsPage() {
       <PageTitle title="Transactions" text="Premium subscription payments from vendors." />
 
       {!transactions ? (
-        <Message text="Loading transactions..." />
+        <LoadingBlock rows={4} />
       ) : transactions.length === 0 ? (
         <Message text="No transactions yet." />
       ) : (

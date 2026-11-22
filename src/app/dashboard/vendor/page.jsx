@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { CalendarDays, CheckCircle, Clock, Crown, Store } from "lucide-react";
 import { toast } from "react-toastify";
 import { api } from "@/lib/api";
-import { Message, PageTitle, StatCard } from "@/components/dashboard/dashboard-parts";
+import { PageTitle, StatCard, StatCardsSkeleton } from "@/components/dashboard/dashboard-parts";
 
 export default function VendorOverviewPage() {
   const [data, setData] = useState(null);
@@ -16,7 +16,15 @@ export default function VendorOverviewPage() {
   }, []);
 
   if (!data) {
-    return <Message text="Loading dashboard..." />;
+    return (
+      <section>
+        <PageTitle
+          title="Your business at a glance"
+          text="Keep your services fresh and answer requests quickly."
+        />
+        <StatCardsSkeleton count={5} className="xl:grid-cols-3" />
+      </section>
+    );
   }
 
   const { services, bookings, me } = data;

@@ -2,6 +2,7 @@
 
 import { authClient } from "@/lib/auth-client";
 import { api } from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
 import BlankService from "./BlankService";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -62,7 +63,26 @@ const ServiceDetailsClient = ({ service }) => {
   const canSeeUnavailable = user?.role === "admin" || user?.email === service.creatorMail;
 
   if (isPending) {
-    return <p className="py-16 text-center text-sm text-stone-500">Loading service...</p>;
+    return (
+      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6" aria-hidden="true">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <Skeleton className="aspect-[16/10] w-full rounded-2xl" />
+            <div className="mt-4 grid grid-cols-3 gap-4">
+              {[0, 1, 2].map((item) => (
+                <Skeleton key={item} className="aspect-[16/10] rounded-xl" />
+              ))}
+            </div>
+            <Skeleton className="mt-6 h-6 w-28 rounded-md" />
+            <Skeleton className="mt-3 h-10 w-3/4 rounded-md" />
+            <Skeleton className="mt-3 h-16 w-full rounded-md" />
+          </div>
+          <div className="lg:col-span-5">
+            <Skeleton className="h-[420px] w-full rounded-2xl" />
+          </div>
+        </div>
+      </section>
+    );
   }
 
   if (!isAvailable && !canSeeUnavailable) {

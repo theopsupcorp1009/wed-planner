@@ -1,3 +1,6 @@
+import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+
 export function PageTitle({ title, text }) {
   return (
     <header>
@@ -27,6 +30,34 @@ export function Message({ text }) {
   return (
     <div className="mt-8 rounded-2xl border border-border bg-card px-6 py-14 text-center text-sm text-muted-foreground">
       {text}
+    </div>
+  );
+}
+
+/** Simple panel placeholder shown while a dashboard section is fetching. */
+export function LoadingBlock({ rows = 3 }) {
+  return (
+    <div className="mt-8 rounded-2xl border border-border bg-card p-6" aria-hidden="true">
+      <Skeleton className="h-5 w-40 rounded-md" />
+      <div className="mt-5 space-y-3">
+        {Array.from({ length: rows }).map((_, index) => (
+          <Skeleton key={index} className="h-11 w-full rounded-lg" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Placeholder for the stat-card grids on the overview pages. */
+export function StatCardsSkeleton({ count = 4, className = "xl:grid-cols-4" }) {
+  return (
+    <div
+      className={cn("mt-8 grid gap-4 sm:grid-cols-2", className)}
+      aria-hidden="true"
+    >
+      {Array.from({ length: count }).map((_, index) => (
+        <Skeleton key={index} className="h-[104px] rounded-2xl" />
+      ))}
     </div>
   );
 }

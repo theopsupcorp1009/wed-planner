@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Clock, Receipt, Store, UserCheck, Users, UserRound } from "lucide-react";
 import { toast } from "react-toastify";
 import { api } from "@/lib/api";
-import { Message, PageTitle, StatCard } from "@/components/dashboard/dashboard-parts";
+import { PageTitle, StatCard, StatCardsSkeleton } from "@/components/dashboard/dashboard-parts";
 
 export default function AdminOverviewPage() {
   const [data, setData] = useState(null);
@@ -16,7 +16,15 @@ export default function AdminOverviewPage() {
   }, []);
 
   if (!data) {
-    return <Message text="Loading dashboard..." />;
+    return (
+      <section>
+        <PageTitle
+          title="Platform overview"
+          text="Everything happening across WedPlan in one place."
+        />
+        <StatCardsSkeleton count={6} className="xl:grid-cols-3" />
+      </section>
+    );
   }
 
   const { users, services, transactions } = data;

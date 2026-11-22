@@ -28,7 +28,7 @@ const SOCIAL_LINKS = [
 export default function Footer() {
   return (
     <footer className="border-t border-border bg-footer text-footer-foreground dark:border-transparent">
-      <div className="mx-auto w-full max-w-[1280px] px-5 py-14 sm:px-8 lg:py-16">
+      <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.3fr] lg:gap-12">
           {/* Logo, short description, social media */}
           <div className="max-w-sm">

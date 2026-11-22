@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# WedPlan — Client
+
+A wedding planning platform where customers discover vendors and request
+bookings, vendors publish services and manage requests, and admins moderate the
+platform. Built with **Next.js 16 (App Router)**, **ShadCN UI**, **Lucide
+icons**, **Better Auth**, **MongoDB**, and **Stripe**.
+
+The API lives in a separate repository (Express + MongoDB).
+
+## Live Website
+
+- **Live site:** `https://<your-client-url>` (replace after deployment)
+- **API base URL:** `https://<your-server-url>`
+
+## Tech Stack
+
+- Next.js 16 (App Router, `proxy.js` route protection)
+- React 19
+- Tailwind CSS v4 with light + dark theme tokens
+- ShadCN UI components + Lucide icons
+- Better Auth (email/password, optional Google)
+- Stripe Checkout for the vendor Premium plan
+- ImgBB for optional image uploads
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Make sure the API server is running and `NEXT_PUBLIC_SERVER_URL` points to it.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Variables
 
-## Learn More
+Create a `.env` file in the project root. **Never commit this file.**
 
-To learn more about Next.js, take a look at the following resources:
+```env
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=<long-random-string>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+NEXT_PUBLIC_SERVER_URL=http://localhost:5000
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>/<db>
+MONGODB_DB=wedplan
 
-## Deploy on Vercel
+GOOGLE_CLIENT_ID=<optional>
+GOOGLE_CLIENT_SECRET=<optional>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_PREMIUM_PRICE_ID=price_...
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+NEXT_PUBLIC_IMAGEBB_API_KEY=<imgbb-key>
+
+JWT_SECRET=<must match the server>
+```
+
+## Admin Account for Evaluation
+
+The admin account is a normal user whose `role` is set to `admin` in the
+database. There is no public admin sign-up.
+
+- **Admin email:** `xenoversegpt@gmail.com`
+- **Admin password:** `<fill in the password used for this account>`
+
+> Make sure this account exists in the production database with
+> `role: "admin"` before submitting, so evaluators can sign in on the live site.
+
+## Scripts
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the dev server |
+| `npm run build` | Production build |
+| `npm run start` | Run the production build |
+| `npm run lint` | Lint the project |
+
+## Features
+
+- Light and dark mode on every page (theme stored via `data-theme`).
+- Global navbar and footer with contact and social links.
+- Role-based dashboards for **customer**, **vendor**, and **admin**.
+- Sign-up with inline validation, optional image upload, then redirect to
+  sign-in (not auto-logged in).
+- Vendors start on the Free plan (`premium: false`) and can keep up to **3
+  active services**. The Add Service page shows an upgrade notice once the limit
+  is reached.
+- Stripe Checkout activates Premium immediately; the success page shows the
+  transaction id, name, email, plan, amount, date, time, and status.
+- `proxy.js` protects `/dashboard/*`, `/payment/*`, and `/services/:id` while
+  leaving `/services` public.
+
+## Deployment Guideline
+
+1. Push this repository to GitHub (without `.env`).
+2. Deploy to Vercel (or any Next.js host).
+3. Add all environment variables above in the host dashboard. Point
+   `NEXT_PUBLIC_SERVER_URL` at the deployed API and `BETTER_AUTH_URL` at the
+   deployed client URL.
+4. In the API's Stripe settings, set the success URL to
+   `https://<your-client-url>/payment/success` and the cancel URL to
+   `https://<your-client-url>/payment/cancel`.
+5. Verify sign-up, sign-in, vendor service creation, and the Stripe upgrade flow
+   on the live site.

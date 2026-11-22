@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { CalendarDays, CheckCircle, Clock, XCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import { api } from "@/lib/api";
-import { Message, PageTitle, StatCard } from "@/components/dashboard/dashboard-parts";
+import { PageTitle, StatCard, StatCardsSkeleton } from "@/components/dashboard/dashboard-parts";
 
 export default function CustomerOverviewPage() {
   const [bookings, setBookings] = useState(null);
@@ -19,7 +19,15 @@ export default function CustomerOverviewPage() {
   }, []);
 
   if (!bookings) {
-    return <Message text="Loading dashboard..." />;
+    return (
+      <section>
+        <PageTitle
+          title="Welcome back"
+          text="Here is what is happening with your booking requests."
+        />
+        <StatCardsSkeleton count={4} />
+      </section>
+    );
   }
 
   const countOf = (status) => bookings.filter((b) => b.status === status).length;

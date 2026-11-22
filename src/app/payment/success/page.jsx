@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import PaymentSuccess from "@/components/payment/PaymentSuccess";
 import { requireRole } from "@/lib/guard";
 
@@ -7,5 +8,10 @@ export const metadata = {
 
 export default async function PaymentSuccessPage() {
   await requireRole("vendor");
-  return <PaymentSuccess />;
+
+  return (
+    <Suspense fallback={null}>
+      <PaymentSuccess />
+    </Suspense>
+  );
 }

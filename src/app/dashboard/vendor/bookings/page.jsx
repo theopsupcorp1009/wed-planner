@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import { Message, PageTitle, StatusPill } from "@/components/dashboard/dashboard-parts";
+import { LoadingBlock, Message, PageTitle, StatusPill } from "@/components/dashboard/dashboard-parts";
 import { api } from "@/lib/api";
 
 export default function VendorBookingsPage() {
@@ -33,7 +33,7 @@ export default function VendorBookingsPage() {
       <PageTitle title="Booking Requests" text="Accept or reject requests from customers." />
 
       {!bookings ? (
-        <Message text="Loading booking requests..." />
+        <LoadingBlock rows={4} />
       ) : bookings.length === 0 ? (
         <Message text="No booking requests yet." />
       ) : (
