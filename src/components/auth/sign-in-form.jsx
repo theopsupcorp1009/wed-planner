@@ -12,7 +12,7 @@ import { authClient } from "@/lib/auth-client";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /** Where to send the user after a successful sign in. */
-const AFTER_SIGNIN_PATH = "/";
+const AFTER_SIGNIN_PATH = "/dashboard";
 
 export function SignInForm() {
   const router = useRouter();
@@ -90,7 +90,7 @@ export function SignInForm() {
     setFormError("");
 
     try {
-      await authClient.signIn.social({ provider: "google" });
+      await authClient.signIn.social({ provider: "google", callbackURL: AFTER_SIGNIN_PATH });
     } catch {
       setFormError("Could not continue with Google. Please try again.");
     }

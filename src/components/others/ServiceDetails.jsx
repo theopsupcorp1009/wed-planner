@@ -1,6 +1,8 @@
 "use client";
 
-import { authClient, useSession } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
+import { api } from "@/lib/api";
+import BlankService from "./BlankService";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -14,7 +16,6 @@ const ServiceDetailsClient = ({ service }) => {
   const [eventLocation, setEventLocation] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [feedback, setFeedback] = useState(null);
 
   const thumbnails = gallery.slice(0, 3);
   const mainImage = gallery[activeIndex] || gallery[0] || "";
@@ -28,9 +29,8 @@ const ServiceDetailsClient = ({ service }) => {
 
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
-  console.log(user);
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!eventDate || !eventLocation.trim()) {
@@ -40,44 +40,34 @@ const handleSubmit = async (e) => {
 
     setSubmitting(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/bookings`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            serviceId: service._id,
-            serviceName: service.serviceName,
-            category: service.category,
-            vendorId: service.vendorId,
-            vendorName: service.creatorName,
-            creatorMail: service.creatorMail,
-            customerName: user.name,
-            customerEmail: user.email,
-            eventDate,
-            eventLocation: eventLocation.trim(),
-            createdAt: new Date(),
-            message: message.trim(),
-          }),
-        },
-      );
-
-      const result = await res.json();
-      if (!res.ok) {
-        toast.error(result.message || "Could not submit booking request.");
-        return;
-      }
+      await api("/customer/bookings", "POST", {
+        serviceId: service._id,
+        eventDate,
+        eventLocation: eventLocation.trim(),
+        message: message.trim(),
+      });
 
       toast.success("Booking request sent successfully.");
       setEventDate("");
       setEventLocation("");
       setMessage("");
-    } catch {
-      toast.error("Network error while sending booking request.");
+    } catch (err) {
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }
   };
+
+  const isAvailable = service.status === "approved" && service.isActive !== false;
+  const canSeeUnavailable = user?.role === "admin" || user?.email === service.creatorMail;
+
+  if (isPending) {
+    return <p className="py-16 text-center text-sm text-stone-500">Loading service...</p>;
+  }
+
+  if (!isAvailable && !canSeeUnavailable) {
+    return <BlankService />;
+  }
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
@@ -153,6 +143,15 @@ const handleSubmit = async (e) => {
               </span>
             </div>
 
+            {user?.role !== "customer" ? (
+              <p className="text-xs text-stone-500 dark:text-stone-400">
+                Only customers can send booking requests.
+              </p>
+            ) : !isAvailable ? (
+              <p className="text-xs text-stone-500 dark:text-stone-400">
+                This service is not available for booking.
+              </p>
+            ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-stone-700 dark:text-stone-300">
@@ -161,6 +160,7 @@ const handleSubmit = async (e) => {
                 <input
                   type="date"
                   value={eventDate}
+                  min={new Date().toISOString().slice(0, 10)}
                   onChange={(e) => setEventDate(e.target.value)}
                   required
                   className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2.5 text-xs text-stone-900 placeholder:text-stone-400 focus:border-[#68324c] focus:outline-none dark:border-[#2d1e29] dark:bg-[#130c11] dark:text-stone-100 dark:placeholder:text-stone-500 dark:focus:border-[#dfa4c0]"
@@ -194,18 +194,6 @@ const handleSubmit = async (e) => {
                 />
               </div>
 
-              {feedback && (
-                <p
-                  className={`text-xs ${
-                    feedback.type === "error"
-                      ? "text-red-600 dark:text-red-400"
-                      : "text-emerald-700 dark:text-emerald-400"
-                  }`}
-                >
-                  {feedback.text}
-                </p>
-              )}
-
               <button
                 type="submit"
                 disabled={submitting}
@@ -214,6 +202,7 @@ const handleSubmit = async (e) => {
                 {submitting ? "Sending..." : "Send Booking Request"}
               </button>
             </form>
+            )}
           </div>
         </div>
       </div>

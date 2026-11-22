@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
+import { uploadImage } from "@/lib/uploadImage";
 
 const ROLES = [
   { value: "customer", label: "Customer" },
@@ -20,30 +21,6 @@ const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 
 /** Where to send the user after a successful sign up. */
 const AFTER_SIGNUP_PATH = "/sign-in";
-
-const uploadImage = async (image) => {
-  const apiKey = process.env.NEXT_PUBLIC_IMAGEBB_API_KEY;
-
-  if (!apiKey) {
-    throw new Error("Image upload is not configured. Please try again later.");
-  }
-
-  const formData = new FormData();
-  formData.append("image", image);
-
-  const response = await fetch(
-    `https://api.imgbb.com/1/upload?key=${apiKey}`,
-    { method: "POST", body: formData }
-  );
-
-  const result = await response.json();
-
-  if (!response.ok || !result.success || !result.data?.url) {
-    throw new Error(result.error?.message || "Image upload failed.");
-  }
-
-  return result.data.url;
-};
 
 export function SignUpForm() {
   const formRef = useRef(null);
@@ -185,7 +162,7 @@ export function SignUpForm() {
     setFormError("");
 
     try {
-      await authClient.signIn.social({ provider: "google" });
+      await authClient.signIn.social({ provider: "google", callbackURL: "/dashboard" });
     } catch {
       setFormError("Could not continue with Google. Please try again.");
     }
