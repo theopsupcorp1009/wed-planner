@@ -1,31 +1,15 @@
-import { Settings } from "lucide-react";
+import ProfileForm from "@/components/dashboard/profile-form";
+import { PageTitle } from "@/components/dashboard/dashboard-parts";
 
 export const metadata = {
-  title: "Settings",
+  title: "Profile Settings",
 };
 
 export default function VendorSettingsPage() {
   return (
     <section>
-      <h1 className="font-serif text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-        Settings
-      </h1>
-      <p className="mt-2 text-muted-foreground">
-        Manage your business profile, payout details and availability.
-      </p>
-
-      <div className="mt-8 rounded-2xl border border-border bg-card px-6 py-14 text-center">
-        <Settings
-          className="mx-auto size-8 text-muted-foreground"
-          aria-hidden="true"
-        />
-        <p className="mt-4 font-medium text-foreground">
-          Business settings are coming soon
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Your studio details will be editable here.
-        </p>
-      </div>
+      <PageTitle title="Profile Settings" text="Update your profile and business details." />
+      <ProfileForm isVendor={true} />
     </section>
   );
 }

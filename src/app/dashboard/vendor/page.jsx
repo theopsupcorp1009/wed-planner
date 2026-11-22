@@ -1,56 +1,41 @@
-import { CalendarDays, Star, Store, Wallet } from "lucide-react";
+"use client";
 
-export const metadata = {
-  title: "Vendor Overview",
-};
-
-const STATS = [
-  { label: "Services", value: "0", icon: Store },
-  { label: "Booking requests", value: "0", icon: CalendarDays },
-  { label: "Reviews", value: "0", icon: Star },
-  { label: "Earnings", value: "$0", icon: Wallet },
-];
+import { useEffect, useState } from "react";
+import { CalendarDays, CheckCircle, Clock, Crown, Store } from "lucide-react";
+import { toast } from "react-toastify";
+import { api } from "@/lib/api";
+import { Message, PageTitle, StatCard } from "@/components/dashboard/dashboard-parts";
 
 export default function VendorOverviewPage() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    Promise.all([api("/vendor/services"), api("/vendor/bookings"), api("/me")])
+      .then(([services, bookings, me]) => setData({ services, bookings, me }))
+      .catch((err) => toast.error(err.message));
+  }, []);
+
+  if (!data) {
+    return <Message text="Loading dashboard..." />;
+  }
+
+  const { services, bookings, me } = data;
+  const activeServices = services.filter(
+    (service) => service.status === "approved" && service.isActive !== false
+  );
+  const pendingBookings = bookings.filter((booking) => booking.status === "pending");
+  const acceptedBookings = bookings.filter((booking) => booking.status === "accepted");
+
   return (
     <section>
-      <header>
-        <p className="text-[13px] font-medium tracking-wide text-muted-foreground uppercase">
-          Vendor
-        </p>
-        <h1 className="mt-1 font-serif text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-          Your business at a glance
-        </h1>
-        <p className="mt-2 text-muted-foreground">
-          Keep your services fresh and answer requests quickly.
-        </p>
-      </header>
+      <PageTitle title="Your business at a glance" text="Keep your services fresh and answer requests quickly." />
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {STATS.map(({ label, value, icon: Icon }) => (
-          <div key={label} className="rounded-2xl border border-border bg-card p-5">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm text-muted-foreground">{label}</p>
-              <Icon className="size-4 text-brand" aria-hidden="true" />
-            </div>
-            <p className="mt-3 font-serif text-3xl font-semibold text-foreground">
-              {value}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-6 rounded-2xl border border-border bg-card p-6">
-        <h2 className="font-serif text-xl font-semibold text-foreground">
-          New requests
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Couples waiting for your reply will show up here.
-        </p>
-
-        <div className="mt-6 rounded-xl border border-dashed border-border px-6 py-12 text-center">
-          <p className="text-sm text-muted-foreground">Nothing to show yet.</p>
-        </div>
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <StatCard label="Total services" value={services.length} icon={Store} />
+        <StatCard label="Active services" value={activeServices.length} icon={CheckCircle} />
+        <StatCard label="Pending booking requests" value={pendingBookings.length} icon={Clock} />
+        <StatCard label="Accepted bookings" value={acceptedBookings.length} icon={CalendarDays} />
+        <StatCard label="Current plan" value={me.subscriptionPlan || "free"} icon={Crown} />
       </div>
     </section>
   );
