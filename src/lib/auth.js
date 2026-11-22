@@ -10,7 +10,6 @@ export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL,
     emailAndPassword: {
         enabled: true,
-        // Matches the "6+ chars" hint on the sign-up form.
         minPasswordLength: 6,
     },
     user: {
@@ -19,7 +18,39 @@ export const auth = betterAuth({
                 type: "string",
                 required: false,
                 defaultValue: "customer",
+                input: false,
+            },
+            isBlocked: {
+                type: "boolean",
+                required: false,
+                defaultValue: false,
+                input: false,
+            },
+            subscriptionPlan: {
+                type: "string",
+                required: false,
+                defaultValue: "free",
+                input: false,
+            },
+            subscriptionExpiresAt: {
+                type: "date",
+                required: false,
+                input: false,
+            },
+            businessName: {
+                type: "string",
+                required: false,
                 input: true,
+            },
+        },
+    },
+    databaseHooks: {
+        user: {
+            create: {
+                before: async (user, context) => {
+                    const role = context?.body?.role === "vendor" ? "vendor" : "customer";
+                    return { data: { ...user, role } };
+                },
             },
         },
     },
