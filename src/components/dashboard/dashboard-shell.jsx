@@ -7,12 +7,11 @@ import {
   ArrowLeft,
   CalendarDays,
   CreditCard,
-  Heart,
   LayoutDashboard,
   Menu,
-  MessageSquare,
+  Plus,
+  Receipt,
   Settings,
-  Star,
   Store,
   Users,
   X,
@@ -32,9 +31,7 @@ const DASHBOARDS = {
     links: [
       { href: "/dashboard/customer", label: "Overview", icon: LayoutDashboard },
       { href: "/dashboard/customer/bookings", label: "My Bookings", icon: CalendarDays },
-      { href: "/dashboard/customer/saved", label: "Saved Vendors", icon: Heart },
-      { href: "/dashboard/customer/messages", label: "Messages", icon: MessageSquare },
-      { href: "/dashboard/customer/settings", label: "Settings", icon: Settings },
+      { href: "/dashboard/customer/settings", label: "Profile Settings", icon: Settings },
     ],
   },
   vendor: {
@@ -44,9 +41,10 @@ const DASHBOARDS = {
     links: [
       { href: "/dashboard/vendor", label: "Overview", icon: LayoutDashboard },
       { href: "/dashboard/vendor/services", label: "My Services", icon: Store },
+      { href: "/dashboard/vendor/add-service", label: "Add Service", icon: Plus },
       { href: "/dashboard/vendor/bookings", label: "Booking Requests", icon: CalendarDays },
-      { href: "/dashboard/vendor/reviews", label: "Reviews", icon: Star },
-      { href: "/dashboard/vendor/settings", label: "Settings", icon: Settings },
+      { href: "/dashboard/vendor/subscription", label: "Subscription", icon: CreditCard },
+      { href: "/dashboard/vendor/settings", label: "Profile Settings", icon: Settings },
     ],
   },
   admin: {
@@ -55,10 +53,10 @@ const DASHBOARDS = {
     basePath: "/dashboard/admin",
     links: [
       { href: "/dashboard/admin", label: "Overview", icon: LayoutDashboard },
-      { href: "/dashboard/admin/users", label: "Users", icon: Users },
-      { href: "/dashboard/admin/vendors", label: "Vendors", icon: Store },
-      { href: "/dashboard/admin/bookings", label: "Bookings", icon: CalendarDays },
-      { href: "/dashboard/admin/payments", label: "Payments", icon: CreditCard },
+      { href: "/dashboard/admin/users", label: "Manage Users", icon: Users },
+      { href: "/dashboard/admin/services", label: "Manage Services", icon: Store },
+      { href: "/dashboard/admin/transactions", label: "Transactions", icon: Receipt },
+      { href: "/dashboard/admin/settings", label: "Profile Settings", icon: Settings },
     ],
   },
 };
