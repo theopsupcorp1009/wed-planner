@@ -8,6 +8,10 @@ const db = client.db(process.env.MONGODB_DB);
 export const auth = betterAuth({
     database: mongodbAdapter(db),
     baseURL: process.env.BETTER_AUTH_URL,
+    trustedOrigins: [
+    process.env.BETTER_AUTH_URL,
+    "https://wedplan-ten.vercel.app",
+],
     emailAndPassword: {
         enabled: true,
         minPasswordLength: 6,
